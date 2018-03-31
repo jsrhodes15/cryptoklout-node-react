@@ -1,0 +1,29 @@
+version: "3"
+services:
+
+  api:
+    container_name: cryptoklout_api
+    build: ./server/
+    volumes:
+      - './server:/usr/src/'
+    ports:
+      - '3002:3002'
+    links:
+      - mongodb
+    depends_on:
+      - mongodb
+
+  client:
+    container_name: cryptoklout_web
+    build: ./web/
+    volumes:
+      - './web:/usr/src/'
+    ports:
+      - '3000:3000'
+
+  mongodb:
+    image: mongo
+    volumes:
+      - './local-db:/data/db'
+    ports:
+      - '27017:27017'
