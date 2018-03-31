@@ -3,12 +3,12 @@ const MongoClient = require("mongodb").MongoClient;
 const bodyParser = require("body-parser");
 const dbConfig = {
   name: "cryptoklout",
-  url: "mongodb://localhost:27017"
+  url: "mongodb://mongodb:27017"
 };
 
 const app = express();
 
-const port = 8000;
+const port = 3002;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
