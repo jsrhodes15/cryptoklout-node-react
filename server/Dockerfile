@@ -4,11 +4,13 @@ WORKDIR /usr/src
 
 ENV PATH /usr/src/node_modules/.bin:$PATH
 
-RUN npm install --global nodemon
+RUN yarn global add nodemon
 
 # Install packages using Yarn
+# use changes to package.json to force Docker not to use the cache
+# when we change our application's nodejs dependencies:
 ADD package.json /tmp/package.json
 RUN cd /tmp && yarn
-RUN mkdir -p /usr/src && cd /usr/src && ln -s /tmp/node_modules
+RUN mkdir -p /usr/src && cp -a /tmp/node_modules /usr/src
 
 CMD ["nodemon", "--legacy-watch"]

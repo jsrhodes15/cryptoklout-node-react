@@ -5,7 +5,8 @@ services:
     container_name: cryptoklout_api
     build: ./server/
     volumes:
-      - './server:/usr/src/'
+      - ./server:/usr/src/
+      - /usr/src/node_modules
     ports:
       - '3002:3002'
     links:
@@ -17,13 +18,14 @@ services:
     container_name: cryptoklout_web
     build: ./web/
     volumes:
-      - './web:/usr/src/'
+      - ./web:/usr/src/
+      - /usr/src/node_modules
     ports:
       - '3000:3000'
 
   mongodb:
     image: mongo
     volumes:
-      - './local-db:/data/db'
+      - ./local-db:/data/db
     ports:
       - '27017:27017'
