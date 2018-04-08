@@ -9,8 +9,6 @@ services:
       - /usr/src/node_modules
     ports:
       - '3002:3002'
-    links:
-      - mongodb
     depends_on:
       - mongodb
 
@@ -19,6 +17,8 @@ services:
     build: ./web/
     volumes:
       - ./web:/usr/src/
+      # This 'anonymous' volume ensures that the node_modules dir from building the image is available in the container
+      # at run time
       - /usr/src/node_modules
     ports:
       - '3000:3000'
