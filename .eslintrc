@@ -5,7 +5,10 @@
       "jsx": true
     }
   },
-  "extends": "airbnb",
+  "extends": [
+    "airbnb",
+    "prettier"
+  ],
   "globals": {
     "describe": true,
     "it": true,
@@ -16,7 +19,7 @@
   },
   "rules": {
     "valid-jsdoc": [
-      "warning",
+      "warn",
       {
         "preferType": {
           "Boolean": "boolean",
@@ -33,7 +36,7 @@
       }
     ],
     "require-jsdoc": [
-      "warning",
+      "warn",
       {
         "require": {
           "FunctionDeclaration": true,
@@ -49,12 +52,24 @@
     "consistent-return": "off",
     "import/no-dynamic-require": "off",
     "global-require": "off",
+    "quotes": [
+      "error",
+      "single"
+    ],
     "max-len": [
       "error",
       120,
       {
         "ignoreComments": true,
         "ignoreTrailingComments": true
+      }
+    ],
+    "prettier/prettier": [
+      "error",
+      {
+        "trailingComma": "es5",
+        "singleQuote": true,
+        "printWidth": 120
       }
     ]
   }

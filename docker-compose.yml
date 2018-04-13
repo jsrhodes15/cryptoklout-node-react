@@ -8,9 +8,10 @@ services:
       - ./server:/usr/src/
       - /usr/src/node_modules
     ports:
-      - '3002:3002'
+      - '3001:3001'
     depends_on:
       - mongodb
+    env_file: ./server/local.env
 
   client:
     container_name: cryptoklout_web

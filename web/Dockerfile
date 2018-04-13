@@ -11,4 +11,6 @@ ADD package.json /tmp/package.json
 RUN cd /tmp && yarn
 RUN mkdir -p /usr/src && cp -a /tmp/node_modules /usr/src
 
+USER node
+
 CMD ["yarn", "run", "start"]

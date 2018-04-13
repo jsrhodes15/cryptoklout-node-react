@@ -1,83 +1,81 @@
-const express = require("express");
-const MongoClient = require("mongodb").MongoClient;
-const bodyParser = require("body-parser");
-const dbConfig = {
-  name: "cryptoklout",
-  url: "mongodb://mongodb:27017"
-};
-const dbOptions = {
-  reconnectTries: 30,
-  reconnectInterval: 1000
-};
-
-function createConnection(dbURL, options) {
-  var db = mongoose.createConnection(dbURL, options);
-
-  db.on("error", function(err) {
-    // If first connect fails because mongod is down, try again later.
-    // This is only needed for first connect, not for runtime reconnects.
-    // See: https://github.com/Automattic/mongoose/issues/5169
-    if (
-      err.message &&
-      err.message.match(/failed to connect to server .* on first connect/)
-    ) {
-      console.log(new Date(), String(err));
-
-      // Wait for a bit, then try to connect again
-      setTimeout(function() {
-        console.log("Retrying first connect...");
-        db.openUri(dbURL).catch(() => {});
-        // Why the empty catch?
-        // Well, errors thrown by db.open() will also be passed to .on('error'),
-        // so we can handle them there, no need to log anything in the catch here.
-        // But we still need this empty catch to avoid unhandled rejections.
-      }, 20 * 1000);
-    } else {
-      // Some other error occurred.  Log it.
-      console.error(new Date(), String(err));
-    }
-  });
-
-  db.once("open", function() {
-    console.log("Connection to db established.");
-  });
-
-  return db;
-}
-
-const app = express();
-
-const port = 3002;
-
-app.use(bodyParser.urlencoded({ extended: true }));
+const app = require("./app");
+const debug = require("debug")("cryptoklout:server");
+const http = require("http");
+const config = require("./config");
 
 /**
- * Attempt to connect to MongoDB, retry on first attempt because the driver does not do this for us.
+ * Get port from environment and store in Express.
  */
-function connectWithRetry() {
-  return MongoClient.connect(dbConfig.url, (err, client) => {
-    if (err) {
-      if (
-        err.message &&
-        err.message.match(/failed to connect to server .* on first connect/)
-      ) {
-        console.warn(
-          "Failed to connect to mongo on startup - retrying in 5 sec"
-        );
-        setTimeout(connectWithRetry, 5000);
-      } else {
-        console.error("Something went terribly wrong connecting to mongo", err);
-      }
-    } else {
-      const db = client.db(dbConfig.name);
 
-      require("./app/routes")(app, db);
+const port = normalizePort(config.PORT);
+app.set("port", port);
 
-      app.listen(port, () => {
-        console.log("We are live on " + port);
-      });
-    }
-  });
+/**
+ * Create HTTP server.
+ */
+
+const server = http.createServer(app);
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on("error", onError);
+server.on("listening", onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  const port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
 }
 
-connectWithRetry();
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== "listen") {
+    throw error;
+  }
+
+  const bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case "EACCES":
+      console.error(bind + " requires elevated privileges");
+      process.exit(1);
+      break;
+    case "EADDRINUSE":
+      console.error(bind + " is already in use");
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  const addr = server.address();
+  const bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
+  debug("Server listening on " + bind);
+}
