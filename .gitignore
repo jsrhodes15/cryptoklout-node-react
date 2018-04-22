@@ -65,3 +65,6 @@ node_modules/
 
 # created by docker to persist mongo data
 local-db
+
+# JetBrains config (Webstorm and such)
+.idea
