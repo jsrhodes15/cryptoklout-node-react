@@ -17,13 +17,13 @@ app.use(express.urlencoded({ extended: false }));
 db.connect();
 
 // test route
-app.get("/", (req, res) => {
+app.get('/', (req, res) => {
   res.json(req.app.locals.db.serverConfig.clientInfo);
 });
 
 // catch all error handler
-app.use(function(err, req, res, next) {
-  const route = (req && req.originalUrl) || "no original url";
+app.use((err, req, res, next) => {
+  const route = (req && req.originalUrl) || 'no original url';
   debug(`api error: ${route}: ${err}`);
   next();
 });
