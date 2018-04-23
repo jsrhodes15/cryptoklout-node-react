@@ -1,7 +1,7 @@
-const app = require("./app");
-const debug = require("debug")("cryptoklout:server");
-const http = require("http");
-const config = require("./config");
+const app = require('./app/index.js');
+const debug = require('debug')('app:server');
+const http = require('http');
+const config = require('./config');
 
 /**
  * Get port from environment and store in Express.

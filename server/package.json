@@ -17,6 +17,7 @@
     "helmet": "3.12.x",
     "joi": "13.1.x",
     "mongodb": "3.0.x",
+    "mongoose": "5.0.x",
     "morgan": "1.9.x",
     "node-fetch": "2.0.x"
   },

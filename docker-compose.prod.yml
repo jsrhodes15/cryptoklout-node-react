@@ -3,4 +3,6 @@ version: "3"
 services:
 
   api:
-    command: 'node index.js'
+    command: 'node server.js'
+    environment:
+      - NODE_ENV=production

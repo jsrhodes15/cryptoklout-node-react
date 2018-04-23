@@ -11,7 +11,11 @@ services:
       - '3001:3001'
     depends_on:
       - mongodb
-    env_file: ./server/local.env
+    environment:
+      - NODE_ENV=development
+      - DEBUG=app:*
+      - DB_URI=mongodb://mongodb:27017
+      - DB_NAME=cryptoklout
 
   client:
     container_name: cryptoklout_web

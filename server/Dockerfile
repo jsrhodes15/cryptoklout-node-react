@@ -23,4 +23,4 @@ ENTRYPOINT ["/tini", "--"]
 
 USER node
 
-CMD ["nodemon", "--legacy-watch", "index.js"]
+CMD ["nodemon", "--legacy-watch", "server.js"]
