@@ -3,8 +3,8 @@ const helmet = require('helmet');
 const logger = require('morgan');
 const cors = require('cors');
 const debug = require('debug')('app:express');
-const config = require('../config');
-const db = require('../libraries/mongodb');
+const config = require('./config');
+const db = require('./libraries/mongodb');
 
 const app = express();
 

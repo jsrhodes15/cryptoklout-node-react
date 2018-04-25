@@ -5,6 +5,7 @@ const config = {
   DB_NAME: process.env.DB_NAME || 'crytoklout',
   LOG_LEVEL: process.env.LOG_LEVEL || 'dev',
   SALT_ROUNDS: process.env.SALT_ROUNDS || 10,
+  SECRET: process.env.SECRET || 'thisisnotsecret',
 };
 
 module.exports = config;
