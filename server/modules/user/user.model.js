@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt-nodejs';
 const genders = ['MALE', 'FEMALE'];
 const validEmailRegex = /^(([^<>()[]\.,;:s@"]+(.[^<>()[]\.,;:s@"]+)*)|(".+"))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/;
 
-const user = mongoose.Schema({
+const User = mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
   email: { type: String, required: true, unique: true, match: validEmailRegex },
   password: { type: String, required: true },
@@ -19,14 +19,11 @@ const user = mongoose.Schema({
 }, { timestamps: true });
 
 // On save Hook, encrypt password
-user.pre('save', function(next) {
-  // get access to the user model
+User.pre('save', function(next) {
+  // get access to the User model
   const user = this;
-  if (user.__v >= 0) {
-    next()
-  }
   // generate a salt, then run callback
-  bcrypt.genSalt(10, (err, salt) => {
+  bcrypt.genSalt(config.SALT_ROUNDS, (err, salt) => {
     if (err) { return next(err); }
 
     // hash our password using the salt
@@ -40,7 +37,7 @@ user.pre('save', function(next) {
   });
 });
 
-user.methods.comparePassword = function(candidatePassword, callback) {
+User.methods.comparePassword = function(candidatePassword, callback) {
   bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
     if (err) {
       return callback(err);
@@ -49,4 +46,4 @@ user.methods.comparePassword = function(candidatePassword, callback) {
   });
 };
 
-module.exports = mongoose.model('User', user);
+module.exports = mongoose.model('User', User);
