@@ -2,7 +2,7 @@ const express = require('express');
 const helmet = require('helmet');
 const logger = require('morgan');
 const cors = require('cors');
-const debug = require('debug')('app:express');
+const debug = require('debug')('crypto:express');
 const config = require('./config');
 const db = require('./libraries/mongodb');
 
