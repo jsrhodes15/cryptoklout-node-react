@@ -1,6 +1,6 @@
-const debug = require('debug')('crypto:auth');
 const jwt = require('jsonwebtoken');
-const config = require('../config');
+const debug = require('debug')('middleware:auth');
+const config = require('./config/index');
 
 /**
  * Authentication Middleware

@@ -2,7 +2,7 @@ const config = {
   ENV: process.env.NODE_ENV || 'development',
   PORT: process.env.PORT || 3001,
   DB_URI: process.env.DB_URI || 'mongodb://localhost:27017',
-  DB_NAME: process.env.DB_NAME || 'crytoklout',
+  DB_NAME: process.env.DB_NAME || 'cryptoklout',
   LOG_LEVEL: process.env.LOG_LEVEL || 'dev',
   SALT_ROUNDS: process.env.SALT_ROUNDS || 10,
   SECRET: process.env.SECRET || 'thisisnotsecret',

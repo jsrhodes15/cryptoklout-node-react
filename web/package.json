@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "node scripts/build.js && npm run move-build-to-server",
+    "build": "node scripts/build.js",
     "move-build-to-server": "mv build _build && mv _build ../server && cd ../server && rm -rf public && mv _build public",
     "test": "node scripts/test.js --env=jsdom"
   },

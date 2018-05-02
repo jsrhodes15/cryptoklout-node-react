@@ -1,12 +1,14 @@
 const mongoose = require('mongoose');
-import bcrypt from 'bcrypt-nodejs';
+const bcrypt = require('bcrypt');
+const debug = require('debug')('crypto:user_model');
+const config = require('../../config');
 
 const genders = ['MALE', 'FEMALE'];
-const validEmailRegex = /^(([^<>()[]\.,;:s@"]+(.[^<>()[]\.,;:s@"]+)*)|(".+"))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/;
+const validEmailRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
 
 const User = mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
-  email: { type: String, required: true, unique: true, match: validEmailRegex },
+  email: { type: String, required: true, unique: true, match: [validEmailRegex, 'Please use a valid email'] },
   password: { type: String, required: true },
   profile: {
     firstName: String,
@@ -19,31 +21,34 @@ const User = mongoose.Schema({
 }, { timestamps: true });
 
 // On save Hook, encrypt password
-User.pre('save', function(next) {
+User.pre('save', async function(next) {
   // get access to the User model
   const user = this;
-  // generate a salt, then run callback
-  bcrypt.genSalt(config.SALT_ROUNDS, (err, salt) => {
-    if (err) { return next(err); }
+  // only hash the password if it has been modified (or is new)
+  if (!user.isModified('password')) return next();
 
-    // hash our password using the salt
-    bcrypt.hash(user.password, salt, null, (err, hash) => {
-      if (err) { return next(err); }
+  try {
+    const salts = await bcrypt.genSalt(config.SALT_ROUNDS);
+    // set the user's password to the resulting hash
+    user.password = await bcrypt.hash(user.password, salts);
+    next();
 
-      // overwrite our unencrypted password with encrypted password
-      user.password = hash;
-      next();
-    });
-  });
+  } catch (err) {
+    debug('%0', 'Error attempting to hash password');
+    next(err)
+  };
 });
 
-User.methods.comparePassword = function(candidatePassword, callback) {
-  bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
-    if (err) {
-      return callback(err);
-    }
+User.methods.comparePassword = async function(candidatePassword, callback) {
+  try {
+  const isMatch = await bcrypt.compare(candidatePassword, this.password);
+    if (err) { return callback(err); }
+    // success, fire callback
     callback(null, isMatch);
-  });
+  } catch (err) {
+    debug('%0', err);
+
+  }
 };
 
 module.exports = mongoose.model('User', User);

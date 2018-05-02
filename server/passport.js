@@ -1,54 +1,41 @@
-'use strict';
-
 const passport = require('passport');
-const debug = require('debug')('crypto:login');
-const User = require('../modules/user/user.model');
-const config = require('../config');
 const { Strategy, ExtractJwt } = require('passport-jwt');
 const LocalStrategy = require('passport-local');
+const debug = require('debug')('crypto:passport');
+const User = require('./modules/user/user.model');
+const config = require('./config');
 
 
 // Create local strategy =====================================================
-const localLogin = new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
 
-  try {
-    // Verify this email and password, call done with the user
-    // if it is the correct email and password
-    // otherwise, call done with false
-    User.findOne({email: email}, (err, user) => {
-      console.log(email);
-      if (err) {
-        return done(err);
-      }
-      if (!user) {
+
+const localLogin = new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
+  // Verify this email and password, call done with the user
+  // if it is the correct email and password
+  // otherwise, call done with false
+  User.findOne({ email: email }, (err, user) => {
+    console.log(email);
+    if (err) { return done(err); }
+    if (!user) { return done(null, false); }
+
+    // compare passwords - is 'password' equal to user.password?
+    user.comparePassword(password, (err, isMatch) => {
+      if (err) { return done(err); }
+      if(!isMatch) {
+        console.log("no match")
         return done(null, false);
       }
-
-      // compare passwords - is 'password' equal to user.password?
-      user.comparePassword(password, (err, isMatch) => {
-        if (err) {
-          return done(err);
-        }
-        if (!isMatch) {
-          console.log(password)
-          console.log("no match")
-          return done(null, false);
-        }
-        console.log(password)
-        return done(null, user);
-      });
+      console.log(password)
+      return done(null, user);
     });
-  } catch (err) {
-    debug('%0', err);
-    return res.status(400).json({ error: err, message: 'Invalid username and password' });
-  }
+  });
 });
 
 
 // Create jwt Strategy =======================================================
 const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromHeader('authorization'),
-  secretOrKey: config.SECRET,
+  secretOrKey: config.SECRET
 };
 
 const jwtLogin = new Strategy(jwtOptions, function(payload, done) {

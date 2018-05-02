@@ -1,5 +1,5 @@
 const app = require('./app');
-const debug = require('debug')('app:server');
+const debug = require('debug')('crypto:server');
 const http = require('http');
 const config = require('./config');
 
@@ -13,7 +13,6 @@ app.set('port', port);
 /**
  * Create HTTP server.
  */
-
 const server = http.createServer(app);
 
 /**

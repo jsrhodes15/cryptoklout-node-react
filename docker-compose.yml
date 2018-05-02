@@ -2,6 +2,7 @@ version: "3"
 services:
 
   api:
+    command: nodemon -L --inspect=0.0.0.0:9229 server.js
     container_name: cryptoklout_api
     build: ./server/
     volumes:
@@ -9,11 +10,13 @@ services:
       - /usr/src/node_modules
     ports:
       - '3001:3001'
+      - '9229:9229'
     depends_on:
       - mongodb
     environment:
+      - PORT=3001
       - NODE_ENV=development
-      - DEBUG=app:*
+      - DEBUG=app:*, crypto:*
       - DB_URI=mongodb://mongodb:27017
       - DB_NAME=cryptoklout
       - SALT_ROUNDS=10
