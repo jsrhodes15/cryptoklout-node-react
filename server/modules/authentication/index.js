@@ -3,9 +3,9 @@
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const debug = require('debug')('crypto:auth');
-const error = require('./libraries/error');
-const config = require('./config');
-const User = require('./modules/user/user.model');
+const error = require('../../libraries/error');
+const config = require('../../config');
+const User = require('../user/user.model');
 
 function tokenForUser(user) {
   return jwt.sign(user.email, config.SECRET);

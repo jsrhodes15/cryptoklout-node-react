@@ -2,8 +2,8 @@ const passport = require('passport');
 const { Strategy, ExtractJwt } = require('passport-jwt');
 const LocalStrategy = require('passport-local');
 const debug = require('debug')('crypto:passport');
-const User = require('./modules/user/user.model');
-const config = require('./config');
+const User = require('../modules/user/user.model');
+const config = require('../config');
 
 
 // Create local strategy =====================================================

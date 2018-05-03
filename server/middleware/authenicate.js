@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const debug = require('debug')('middleware:auth');
-const config = require('./config/index');
+const config = require('../config');
 
 /**
  * Authentication Middleware

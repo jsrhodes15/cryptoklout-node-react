@@ -1,6 +1,6 @@
 const express = require('express');
 const debug = require('debug')('crypto:router');
-const authentication = require('../authentication');
+const authentication = require('../modules/authentication/index');
 
 const router = express.Router();
 
