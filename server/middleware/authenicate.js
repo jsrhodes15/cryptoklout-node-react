@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const debug = require('debug')('middleware:auth');
+const debug = require('debug')('crypto:auth-mw');
 const config = require('../config');
 
 /**

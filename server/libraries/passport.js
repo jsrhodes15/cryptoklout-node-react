@@ -14,18 +14,19 @@ const localLogin = new LocalStrategy({ usernameField: 'email' }, (email, passwor
   // if it is the correct email and password
   // otherwise, call done with false
   User.findOne({ email: email }, (err, user) => {
-    console.log(email);
-    if (err) { return done(err); }
+    if (err) {
+      debug('%0 Error attempting to find password');
+      return donne(err);
+    }
     if (!user) { return done(null, false); }
 
     // compare passwords - is 'password' equal to user.password?
     user.comparePassword(password, (err, isMatch) => {
       if (err) { return done(err); }
       if(!isMatch) {
-        console.log("no match")
+        debug('%0', 'Provided password does not match');
         return done(null, false);
       }
-      console.log(password)
       return done(null, user);
     });
   });
@@ -39,7 +40,7 @@ const jwtOptions = {
 };
 
 const jwtLogin = new Strategy(jwtOptions, function(payload, done) {
-  console.log(payload);
+  debug('@PAYLOAD:', payload)
   // See if the user ID in the payload exists in DB
   // If it does, call 'done' with that user
   // Otherwise, call done without a user object
@@ -56,7 +57,7 @@ const jwtLogin = new Strategy(jwtOptions, function(payload, done) {
 
 // Create strategy for verifying user roles
 const adminLogin = new Strategy(jwtOptions, function(payload, done) {
-  console.log(payload);
+  debug('@PAYLOAD', payload);
   // See if the user ID in the payload exists in DB
   // If it does, call 'done' with that user
   // Otherwise, call done without a user object
