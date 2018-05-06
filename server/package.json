@@ -4,8 +4,8 @@
   "description": "node api for cryptoklout.com",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon --legacy-watch index.js",
-    "start:prod": "node index.js"
+    "start:dev": "DEBUG=* node --inspect server",
+    "start:prod": "node server"
   },
   "author": "",
   "license": "ISC",

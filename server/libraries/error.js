@@ -1,3 +1,6 @@
+'use strict';
+
+
 /**
  * Returns an error object with a friendly message
  *

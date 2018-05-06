@@ -8,7 +8,7 @@ const config = require('../../config');
 const User = require('../user/user.model');
 
 function tokenForUser(user) {
-  return jwt.sign(user.email, config.SECRET);
+  return jwt.sign(user._id, config.SECRET);
 }
 
 function validate(email, password) {
@@ -21,7 +21,7 @@ function signin(req, res) {
   res.send({token: tokenForUser(req.user), user_id: req.user._id});
 }
 
-async function signup(req, res) {
+async function signup(req, res, next) {
   const {email, password} = req.body;
   try {
     validate(email, password);
@@ -30,7 +30,7 @@ async function signup(req, res) {
     debug(existingUser);
     // if a user with email exists, return an error
     if (existingUser) {
-      return res.status(422).send({error: 'Email is already in use'});
+      return res.status(422).json({error: 'Email is already in use'});
     }
 
     // if a user with email does not exist, create and save user record
@@ -45,7 +45,7 @@ async function signup(req, res) {
     res.json({token: tokenForUser(user), user_id: user._id});
   } catch (err) {
     debug('%0', err);
-    res.status(400).json(error.friendlyMessage(err, 'Something went wrong'));
+    res.status(400).json({ error: error.friendlyMessage(err, 'Something went wrong') });
 
   }
 }

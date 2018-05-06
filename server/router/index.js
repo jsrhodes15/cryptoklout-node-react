@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('express');
 const debug = require('debug')('crypto:router');
 const authentication = require('../modules/authentication/index');
@@ -20,7 +22,7 @@ router.route('/')
     res.json(req.body)
 });
 // define the about route
-router.route('/signup')
+router.route('/new')
   .post(authentication.signup);
 
 
