@@ -1,4 +1,4 @@
-const app = require('./app');
+const app = require('./app/index');
 const debug = require('debug')('crypto:server');
 const http = require('http');
 const config = require('./config');

@@ -1,5 +1,3 @@
-'use strict';
-
 const debug = require('debug')('crypto:db');
 const mongoose = require('mongoose');
 const config = require('../config');

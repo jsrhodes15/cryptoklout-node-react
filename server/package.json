@@ -4,8 +4,8 @@
   "description": "node api for cryptoklout.com",
   "main": "server.js",
   "scripts": {
-    "start:dev": "DEBUG=* node --inspect server",
-    "start:prod": "node server"
+    "start:dev": "DEBUG=* node --inspect index",
+    "start:prod": "node index"
   },
   "author": "",
   "license": "ISC",

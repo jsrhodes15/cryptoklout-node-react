@@ -1,5 +1,3 @@
-'use strict';
-
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const debug = require('debug')('crypto:user_model');
@@ -41,16 +39,10 @@ User.pre('save', async function(next) {
   };
 });
 
-User.methods.comparePassword = async function(candidatePassword, callback) {
-  try {
+User.methods.comparePassword = async function(candidatePassword) {
   const isMatch = await bcrypt.compare(candidatePassword, this.password);
-    // success, fire callback
-    callback(null, isMatch);
-  } catch (err) {
-    debug('%0', err);
-    return callback(err);
 
-  }
+  return isMatch;
 };
 
 module.exports = mongoose.model('User', User);

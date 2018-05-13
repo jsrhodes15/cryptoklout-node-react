@@ -1,18 +1,16 @@
-'use strict';
-
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const debug = require('debug')('crypto:auth');
-const error = require('../../libraries/error');
-const config = require('../../config');
-const User = require('../user/user.model');
-
-function tokenForUser(user) {
-  return jwt.sign(user._id, config.SECRET);
-}
+const error = require('./error');
+const config = require('../config');
+const User = require('../modules/user/user.model');
 
 function validate(email, password) {
   if (!email || !password) throw new Error('Email and Password are required');
+}
+
+function tokenForUser(user) {
+  return jwt.sign({ user_id: user._id }, config.SECRET);
 }
 
 function signin(req, res) {
@@ -21,7 +19,7 @@ function signin(req, res) {
   res.send({token: tokenForUser(req.user), user_id: req.user._id});
 }
 
-async function signup(req, res, next) {
+async function signup(req, res) {
   const {email, password} = req.body;
   try {
     validate(email, password);

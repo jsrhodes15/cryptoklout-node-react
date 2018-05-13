@@ -1,14 +1,12 @@
-'use strict';
-
 const express = require('express');
 const helmet = require('helmet');
 const logger = require('morgan');
 const cors = require('cors');
+const passport = require('passport');
 const debug = require('debug')('crypto:express');
-const config = require('./config');
-const db = require('./libraries/mongodb');
-
-const routes = require('./router');
+const config = require('../config');
+const db = require('../services/mongodb');
+const user = require('../modules/user');
 
 const app = express();
 
@@ -18,6 +16,9 @@ app.use(logger(config.LOG_LEVEL));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+require('../services/passport');
+app.use(passport.initialize());
+
 db.connect();
 
 // test route
@@ -25,7 +26,7 @@ app.get('/', (req, res) => {
   res.json({message: "All Good!"});
 });
 
-app.use('/users', routes);
+app.use('/', user);
 
 // catch all error handler
 app.use((err, req, res, next) => {
